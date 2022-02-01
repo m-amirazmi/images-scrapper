@@ -4,10 +4,11 @@ const { JSDOM } = jsdom;
 const fs = require("fs");
 const imageDownload = require("image-download");
 const imageType = require("image-type");
+const { tiny } = require("./utils/configs");
 
 // SPECIFY THE CAT & SUBCAT
 const category = "furniture";
-const subcategory = "table";
+const subcategory = "cupboard_closet"; // bed, chair, sofa, table, cupboard_closet
 
 const fetchWebpages = async () => {
 	// FETCH THE IMAGE LIST FROM THE SUBCAT PAGE
@@ -27,12 +28,20 @@ const fetchWebpages = async () => {
 	console.log("TOTAL DOWNLOAD LINKS =>", downloadPngLinks.length);
 
 	// DOWNLOAD THE IMAGE AND STORE IN DIRECTORY
+	// fs.mkdirSync(`./downloads/${subcategory}`);
+
 	downloadPngLinks.forEach((url, key) => {
 		const getName = url.split("/")[5].split(".")[0];
 
-		imageDownload(url).then((buffer) => {
+		imageDownload(url).then(async (buffer) => {
 			const type = imageType(buffer);
-			fs.writeFile(`./downloads/${subcategory}/${getName}.${type.ext}`, buffer, (err) => err && console.log(err, url));
+
+			const compressedFile = await tiny.fromBuffer(buffer).toBuffer();
+			const filename = `./downloads/${subcategory}/${getName}.${type.ext}`;
+
+			fs.writeFile(filename, compressedFile, (err) => {
+				return;
+			});
 
 			const dir = `./downloads/${subcategory}`;
 			fs.readdir(dir, (err, files) => {

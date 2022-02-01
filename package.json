@@ -24,6 +24,8 @@
     "image-download": "^2.1.0",
     "image-downloader": "^4.0.3",
     "isomorphic-fetch": "^3.0.0",
-    "jsdom": "^19.0.0"
+    "jimp": "^0.16.1",
+    "jsdom": "^19.0.0",
+    "tinify": "^1.6.1"
   }
 }
